@@ -62,7 +62,7 @@ const deleteRecipe = async (req, res) => {
     }
 };
 
-// ✅ Search Controller Function
+//  Search Controller Function
 const searchRecipeByTitle = async (req, res) => {
     const { title } = req.query;
 
@@ -84,5 +84,5 @@ module.exports = {
     editRecipe,
     deleteRecipe,
     upload,
-    searchRecipeByTitle // ✅ export new controller
+    searchRecipeByTitle //  export new controller
 };

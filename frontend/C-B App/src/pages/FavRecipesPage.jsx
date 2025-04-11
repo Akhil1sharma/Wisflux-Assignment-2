@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import RecipeItems from '../components/RecipeItems'; // ✅ reuse the component!
+import RecipeItems from '../components/RecipeItems'; // reuse the component!
 
 export default function FavRecipesPage() {
   const [favourites, setFavourites] = useState([]);
 
   useEffect(() => {
-    const favs = JSON.parse(localStorage.getItem("fav")) || []; // ✅ key should match what's used in RecipeItems
+    const favs = JSON.parse(localStorage.getItem("fav")) || []; //  key should match what's used in RecipeItems
     setFavourites(favs);
   }, []);
 
