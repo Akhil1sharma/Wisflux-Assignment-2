@@ -1,42 +1,90 @@
-import React, { useEffect, useState } from 'react'
-import Modal from './Modal'
-import InputForm from './InputForm'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const [isOpen,setIsOpen]=useState(false)
-  let token=localStorage.getItem("token")
-  const [isLogin,setIsLogin]=useState(token ? false : true)
-  let user=JSON.parse(localStorage.getItem("user"))
+  const [isLogin, setIsLogin] = useState(!!localStorage.getItem("token"));
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    setIsLogin(token ? false : true)
-  },[token])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsLogin(!!localStorage.getItem("token"));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
 
-  const checkLogin=()=>{
-    if(token){
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      setIsLogin(true)
-
+  const handleAuthClick = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setIsLogin(false);
+      navigate("/");
+    } else {
+      navigate("/login");
     }
-    else{
-      setIsOpen(true)
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() !== "") {
+      navigate(`/search?query=${searchQuery}`);
     }
-  }
+  };
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
-    <>
-        <header>
-            <h2>Cook-Book App</h2>
-            <ul>
-                <li><NavLink to="/">Home</NavLink></li>
-                <li onClick={()=>isLogin && setIsOpen(true)}><NavLink to={ !isLogin ? "/myRecipe" : "/"}>My Recipe</NavLink></li>
-                <li onClick={()=>isLogin && setIsOpen(true)}><NavLink to={ !isLogin ? "/favRecipe" : "/"}>Favourites</NavLink></li>
-                <li onClick={checkLogin}><p className='login'>{ (isLogin)? "Login": "Logout" }{user?.email ? `(${user?.email})` : ""}</p></li>
-            </ul>
-        </header>
-       { (isOpen) && <Modal onClose={()=>setIsOpen(false)}><InputForm setIsOpen={()=>setIsOpen(false)}/></Modal>}
-    </>
-  )
+    <header>
+      {/* ✅ Clickable Logo */}
+      <Link to="/" className="app-logo">
+        <h2>Cook-Book App</h2>
+      </Link>
+
+      {/* Search Bar */}
+      <form onSubmit={handleSearch} className="search-form">
+        <input
+          type="text"
+          placeholder="Search recipes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      <ul>
+        <li>
+          <NavLink
+            to="/"
+            className={({ isActive }) => isActive ? "active nav-link" : "nav-link"}
+          >
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to={isLogin ? "/myRecipe" : "/login"}
+            className={({ isActive }) => isActive ? "active nav-link" : "nav-link"}
+          >
+            My Recipe
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to={isLogin ? "/favRecipe" : "/login"}
+            className={({ isActive }) => isActive ? "active nav-link" : "nav-link"}
+          >
+            Favourites
+          </NavLink>
+        </li>
+        <li onClick={handleAuthClick}>
+          <p className="login">
+            {isLogin ? "Logout" : "Login"}
+            {user?.email ? ` (${user.email})` : ""}
+          </p>
+        </li>
+      </ul>
+    </header>
+  );
 }
