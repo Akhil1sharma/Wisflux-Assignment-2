@@ -10,7 +10,7 @@ import RecipeDetails from './pages/RecipeDetails';
 import LoginPage from './pages/LoginPage';
 import MyRecipes from './pages/MyRecipes';
 import FavRecipesPage from './pages/FavRecipesPage';
-import SearchPage from './pages/SearchPage'; // ✅ Import SearchPage
+import SearchPage from './pages/SearchPage'; //  Import SearchPage
 
 // Load all recipes
 const getAllRecipes = async () => {
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       { path: "/editRecipe/:id", element: <EditRecipe /> },
       { path: "/recipe/:id", element: <RecipeDetails />, loader: getRecipe },
       { path: "/login", element: <LoginPage /> },
-      { path: "/search", element: <SearchPage /> } // ✅ Added search route
+      { path: "/search", element: <SearchPage /> } // Added search route
     ]
   }
 ]);

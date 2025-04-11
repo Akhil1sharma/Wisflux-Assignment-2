@@ -1,6 +1,6 @@
 import React from 'react';
 import InputForm from '../components/InputForm';
-import '../App.css'; // make sure global CSS is imported
+import '../App.css'; //  sure global CSS is imported
 
 const LoginPage = () => {
   return (
