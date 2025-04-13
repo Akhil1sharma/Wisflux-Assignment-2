@@ -21,7 +21,7 @@ export default function AddFoodRecipe() {
     } else if (name === "file") {
       const file = files[0];
       setRecipeData((pre) => ({ ...pre, file }));
-      setPreview(URL.createObjectURL(file));
+      setPreview(URL.createObjectURL(file)); // Preview the uploaded image
     } else {
       let val = name === "ingredients" ? value.split(",") : value;
       setRecipeData((pre) => ({ ...pre, [name]: val }));
@@ -58,8 +58,9 @@ export default function AddFoodRecipe() {
     e.preventDefault();
     const { title, time, ingredients, instructions, file } = recipeData;
 
+    // Validate all required fields, including the file (image upload)
     if (!title || !time || !ingredients || !instructions || !file) {
-      setError("Please fill in all fields.");
+      setError("Please fill in all fields, including the image.");
       return;
     }
 

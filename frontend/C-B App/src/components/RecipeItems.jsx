@@ -38,7 +38,12 @@ export default function RecipeItems({ recipes: propRecipes }) {
     return (
         <div className='card-container'>
             {allRecipes?.map((item, index) => (
-                <div key={index} className='card' onDoubleClick={() => navigate(`/recipe/${item._id}`)}>
+                <div
+                    key={index}
+                    className='card'
+                    onClick={() => navigate(`/recipe/${item._id}`)}
+                    style={{ cursor: 'pointer' }}
+                >
                     <img src={`http://localhost:5000/images/${item.coverImage}`} width="120px" height="100px" alt={item.title} />
                     <div className='card-body'>
                         <div className='title'>{item.title}</div>
@@ -46,13 +51,19 @@ export default function RecipeItems({ recipes: propRecipes }) {
                             <div className='timer'><BsStopwatchFill /> {item.time}</div>
                             {!path ? (
                                 <FaHeart
-                                    onClick={() => favRecipe(item)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        favRecipe(item);
+                                    }}
                                     style={{ color: favItems.some(res => res._id === item._id) ? "red" : "" }}
                                 />
                             ) : (
                                 <div className='action'>
-                                    <Link to={`/editRecipe/${item._id}`} className="editIcon"><FaEdit /></Link>
-                                    <MdDelete onClick={() => onDelete(item._id)} className='deleteIcon' />
+                                    <Link to={`/editRecipe/${item._id}`} className="editIcon" onClick={(e) => e.stopPropagation()}><FaEdit /></Link>
+                                    <MdDelete onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDelete(item._id);
+                                    }} className='deleteIcon' />
                                 </div>
                             )}
                         </div>
