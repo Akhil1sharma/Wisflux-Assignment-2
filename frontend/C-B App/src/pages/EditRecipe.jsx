@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 
 export default function EditRecipe() {
   const [recipeData, setRecipeData] = useState({});
+  const [imagePreview, setImagePreview] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
@@ -25,6 +26,7 @@ export default function EditRecipe() {
           instructions: res.instructions,
           time: res.time
         });
+        setImagePreview(`http://localhost:5000/images/${res.coverImage}`); // ✅ Corrected image preview path
       } catch (err) {
         setError("Failed to fetch recipe data.");
       }
@@ -39,6 +41,13 @@ export default function EditRecipe() {
         : e.target.name === "file"
         ? e.target.files[0]
         : e.target.value;
+
+    if (e.target.name === "file") {
+      const file = e.target.files[0];
+      if (file) {
+        setImagePreview(URL.createObjectURL(file)); // ✅ Preview for newly selected image
+      }
+    }
 
     setRecipeData((pre) => ({ ...pre, [e.target.name]: val }));
   };
@@ -91,7 +100,7 @@ export default function EditRecipe() {
             />
           </div>
           <div className='form-control'>
-            <label>Time</label>
+            <label>Time (in minutes)</label>
             <input
               type="number"
               className='input'
@@ -115,6 +124,7 @@ export default function EditRecipe() {
             <ReactQuill
               value={recipeData.instructions || ""}
               onChange={handleQuillChange}
+              theme="snow"
             />
           </div>
           <div className='form-control'>
@@ -125,6 +135,16 @@ export default function EditRecipe() {
               name="file"
               onChange={onHandleChange}
             />
+            {imagePreview && (
+              <div style={{ marginTop: "10px" }}>
+                <p>Current Image Preview:</p>
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{ width: "200px", borderRadius: "8px" }}
+                />
+              </div>
+            )}
           </div>
           {error && <p className="error">{error}</p>}
           <button type="submit">Update Recipe</button>

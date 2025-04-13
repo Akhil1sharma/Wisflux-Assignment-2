@@ -19,8 +19,24 @@ const getRecipes = async (req, res) => {
 };
 
 const getRecipe = async (req, res) => {
-    const recipe = await Recipes.findById(req.params.id);
-    res.json(recipe);
+    try {
+        const recipe = await Recipes.findById(req.params.id);
+
+        if (!recipe) {
+            return res.status(404).json({ message: "Recipe not found" });
+        }
+
+        const imageUrl = recipe.coverImage
+            ? `http://localhost:5000/images/${recipe.coverImage}`
+            : "";
+
+        res.json({
+            ...recipe._doc,
+            imageUrl
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching recipe", error: err.message });
+    }
 };
 
 const addRecipe = async (req, res) => {
@@ -28,13 +44,18 @@ const addRecipe = async (req, res) => {
     const { title, ingredients, instructions, time } = req.body;
 
     if (!title || !ingredients || !instructions) {
-        res.json({ message: "Required fields can't be empty" });
+        return res.status(400).json({ message: "Required fields can't be empty" });
     }
 
     const newRecipe = await Recipes.create({
-        title, ingredients, instructions, time, coverImage: req.file.filename,
+        title,
+        ingredients,
+        instructions,
+        time,
+        coverImage: req.file.filename,
         createdBy: req.user.id
     });
+
     return res.json(newRecipe);
 };
 
@@ -44,12 +65,18 @@ const editRecipe = async (req, res) => {
 
     try {
         if (recipe) {
-            let coverImage = req.file?.filename ? req.file?.filename : recipe.coverImage;
-            await Recipes.findByIdAndUpdate(req.params.id, { ...req.body, coverImage }, { new: true });
-            res.json({ title, ingredients, instructions, time });
+            let coverImage = req.file?.filename ? req.file.filename : recipe.coverImage;
+            const updatedRecipe = await Recipes.findByIdAndUpdate(
+                req.params.id,
+                { title, ingredients, instructions, time, coverImage },
+                { new: true }
+            );
+            res.json(updatedRecipe);
+        } else {
+            res.status(404).json({ message: "Recipe not found" });
         }
     } catch (err) {
-        return res.status(404).json({ message: err });
+        return res.status(500).json({ message: "Update failed", error: err.message });
     }
 };
 
@@ -62,13 +89,12 @@ const deleteRecipe = async (req, res) => {
     }
 };
 
-//  Search Controller Function
 const searchRecipeByTitle = async (req, res) => {
     const { title } = req.query;
 
     try {
         const recipes = await Recipes.find({
-            title: { $regex: title, $options: 'i' } // case-insensitive search
+            title: { $regex: title, $options: 'i' }
         });
 
         res.status(200).json(recipes);
@@ -84,5 +110,5 @@ module.exports = {
     editRecipe,
     deleteRecipe,
     upload,
-    searchRecipeByTitle //  export new controller
+    searchRecipeByTitle
 };

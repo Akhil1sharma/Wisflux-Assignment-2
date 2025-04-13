@@ -9,22 +9,21 @@ export default function AddFoodRecipe() {
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
 
   const onHandleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
 
     if (name === "title") {
       setRecipeData((pre) => ({ ...pre, [name]: value }));
       fetchSuggestions(value);
+    } else if (name === "file") {
+      const file = files[0];
+      setRecipeData((pre) => ({ ...pre, file }));
+      setPreview(URL.createObjectURL(file));
     } else {
-      let val =
-        name === "ingredients"
-          ? value.split(",")
-          : name === "file"
-          ? e.target.files[0]
-          : value;
-
+      let val = name === "ingredients" ? value.split(",") : value;
       setRecipeData((pre) => ({ ...pre, [name]: val }));
     }
   };
@@ -57,7 +56,6 @@ export default function AddFoodRecipe() {
 
   const onHandleSubmit = async (e) => {
     e.preventDefault();
-
     const { title, time, ingredients, instructions, file } = recipeData;
 
     if (!title || !time || !ingredients || !instructions || !file) {
@@ -66,7 +64,12 @@ export default function AddFoodRecipe() {
     }
 
     try {
-      await axios.post("http://localhost:5000/recipe", recipeData, {
+      const formData = new FormData();
+      Object.keys(recipeData).forEach((key) => {
+        formData.append(key, recipeData[key]);
+      });
+
+      await axios.post("http://localhost:5000/recipe", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'authorization': 'bearer ' + localStorage.getItem("token")
@@ -85,7 +88,7 @@ export default function AddFoodRecipe() {
       <div className="container">
         <form className='form' onSubmit={onHandleSubmit}>
           <div className='form-control' style={{ position: 'relative' }}>
-            <label>Title</label>
+            <label>Title <span className="required">*</span></label>
             <input
               type="text"
               className='input'
@@ -106,22 +109,40 @@ export default function AddFoodRecipe() {
               </ul>
             )}
           </div>
+
           <div className='form-control'>
-            <label>Time</label>
-            <input type="text" className='input' name="time" onChange={onHandleChange} />
+            <label>Time (in minutes) <span className="required">*</span></label>
+            <input
+              type="number"
+              className='input'
+              name="time"
+              value={recipeData.time || ""}
+              onChange={onHandleChange}
+            />
           </div>
+
           <div className='form-control'>
-            <label>Ingredients</label>
-            <textarea className='input-textarea' name="ingredients" rows="5" onChange={onHandleChange}></textarea>
+            <label>Ingredients (comma-separated) <span className="required">*</span></label>
+            <textarea
+              className='input-textarea'
+              name="ingredients"
+              rows="5"
+              value={recipeData.ingredients?.join(",") || ""}
+              onChange={onHandleChange}
+            ></textarea>
           </div>
+
           <div className='form-control'>
-            <label>Instructions</label>
+            <label>Instructions <span className="required">*</span></label>
             <ReactQuill value={recipeData.instructions || ""} onChange={handleQuillChange} />
           </div>
+
           <div className='form-control'>
-            <label>Recipe Image</label>
+            <label>Recipe Image <span className="required">*</span></label>
             <input type="file" className='input' name="file" onChange={onHandleChange} />
+            {preview && <img src={preview} alt="Preview" className="preview-img" />}
           </div>
+
           {error && <p className="error">{error}</p>}
           <button type="submit">Add Recipe</button>
         </form>

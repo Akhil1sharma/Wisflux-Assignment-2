@@ -429,3 +429,13 @@ section {
     color: #ffffff !important;
   }
 }
+.preview-img {
+  width: 200px;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.required {
+  color: red;
+}
