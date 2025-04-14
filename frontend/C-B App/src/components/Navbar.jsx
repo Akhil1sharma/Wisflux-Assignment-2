@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 
-
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState(!!localStorage.getItem("token"));
   const [searchQuery, setSearchQuery] = useState("");
