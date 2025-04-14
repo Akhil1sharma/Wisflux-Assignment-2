@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 
+
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState(!!localStorage.getItem("token"));
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,7 +37,7 @@ export default function Navbar() {
 
   return (
     <header>
-      {/* ✅ Clickable Logo */}
+      {/* Clickable Logo */}
       <Link to="/" className="app-logo">
         <h2>Cook-Book App</h2>
       </Link>

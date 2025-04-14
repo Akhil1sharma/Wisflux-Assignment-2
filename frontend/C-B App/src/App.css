@@ -369,7 +369,6 @@ section {
   background: #f0f0f0;
 }
 
-/* DARK MODE SUPPORT with light bluish tones */
 @media (prefers-color-scheme: dark) {
   body, section, .add-recipe-page, .fav-page, .login-page-wrapper, .form {
     background-color: #1e2a38;
@@ -429,6 +428,7 @@ section {
     color: #ffffff !important;
   }
 }
+
 .preview-img {
   width: 200px;
   height: auto;
@@ -436,6 +436,35 @@ section {
   border-radius: 10px;
   object-fit: cover;
 }
+
 .required {
   color: red;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.search-form button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #6366F1;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+  background-color: #4F46E5;
 }
