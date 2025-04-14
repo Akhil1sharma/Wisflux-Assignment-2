@@ -26,7 +26,7 @@ export default function EditRecipe() {
           instructions: res.instructions,
           time: res.time
         });
-        setImagePreview(`http://localhost:5000/images/${res.coverImage}`); // ✅ Corrected image preview path
+        setImagePreview(`http://localhost:5000/images/${res.coverImage}`);
       } catch (err) {
         setError("Failed to fetch recipe data.");
       }
@@ -35,21 +35,17 @@ export default function EditRecipe() {
   }, [id]);
 
   const onHandleChange = (e) => {
-    let val =
-      e.target.name === "ingredients"
-        ? e.target.value
-        : e.target.name === "file"
-        ? e.target.files[0]
-        : e.target.value;
+    const { name, value, files } = e.target;
 
-    if (e.target.name === "file") {
-      const file = e.target.files[0];
+    if (name === "file") {
+      const file = files[0];
       if (file) {
-        setImagePreview(URL.createObjectURL(file)); // ✅ Preview for newly selected image
+        setImagePreview(URL.createObjectURL(file));
+        setRecipeData((prev) => ({ ...prev, file }));
       }
+    } else {
+      setRecipeData((prev) => ({ ...prev, [name]: value }));
     }
-
-    setRecipeData((pre) => ({ ...pre, [e.target.name]: val }));
   };
 
   const handleQuillChange = (value) => {
@@ -68,7 +64,12 @@ export default function EditRecipe() {
     try {
       const formData = new FormData();
       Object.keys(recipeData).forEach((key) => {
-        formData.append(key, recipeData[key]);
+        if (key === "ingredients") {
+          // Ensure ingredients are stored as an array
+          formData.append("ingredients", recipeData.ingredients.split(","));
+        } else {
+          formData.append(key, recipeData[key]);
+        }
       });
 
       await axios.put(`http://localhost:5000/recipe/${id}`, formData, {
@@ -90,7 +91,7 @@ export default function EditRecipe() {
       <div className="container">
         <form className='form' onSubmit={onHandleSubmit}>
           <div className='form-control'>
-            <label>Title</label>
+            <label>Title <span className="required">*</span></label>
             <input
               type="text"
               className='input'
@@ -100,7 +101,7 @@ export default function EditRecipe() {
             />
           </div>
           <div className='form-control'>
-            <label>Time (in minutes)</label>
+            <label>Time (in minutes) <span className="required">*</span></label>
             <input
               type="number"
               className='input'
@@ -110,7 +111,7 @@ export default function EditRecipe() {
             />
           </div>
           <div className='form-control'>
-            <label>Ingredients</label>
+            <label>Ingredients (comma-separated) <span className="required">*</span></label>
             <textarea
               className='input-textarea'
               name="ingredients"
@@ -120,7 +121,7 @@ export default function EditRecipe() {
             ></textarea>
           </div>
           <div className='form-control'>
-            <label>Instructions</label>
+            <label>Instructions <span className="required">*</span></label>
             <ReactQuill
               value={recipeData.instructions || ""}
               onChange={handleQuillChange}
@@ -133,6 +134,7 @@ export default function EditRecipe() {
               type="file"
               className='input'
               name="file"
+              accept="image/*"
               onChange={onHandleChange}
             />
             {imagePreview && (

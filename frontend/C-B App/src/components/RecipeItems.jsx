@@ -44,7 +44,13 @@ export default function RecipeItems({ recipes: propRecipes }) {
                     onClick={() => navigate(`/recipe/${item._id}`)}
                     style={{ cursor: 'pointer' }}
                 >
-                    <img src={`http://localhost:5000/images/${item.coverImage}`} width="120px" height="100px" alt={item.title} />
+                    <img
+                        src={`http://localhost:5000/images/${item.coverImage}`}
+                        onError={(e) => e.target.src = "/default-image.jpg"}
+                        width="120px"
+                        height="100px"
+                        alt={item.title}
+                    />
                     <div className='card-body'>
                         <div className='title'>{item.title}</div>
                         <div className='icons'>

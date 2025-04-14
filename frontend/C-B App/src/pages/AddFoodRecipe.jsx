@@ -140,7 +140,13 @@ export default function AddFoodRecipe() {
 
           <div className='form-control'>
             <label>Recipe Image <span className="required">*</span></label>
-            <input type="file" className='input' name="file" onChange={onHandleChange} />
+            <input
+              type="file"
+              className='input'
+              name="file"
+              accept="image/*"
+              onChange={onHandleChange}
+            />
             {preview && <img src={preview} alt="Preview" className="preview-img" />}
           </div>
 
