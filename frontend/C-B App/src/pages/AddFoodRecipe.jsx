@@ -58,7 +58,6 @@ export default function AddFoodRecipe() {
     e.preventDefault();
     const { title, time, ingredients, instructions, file } = recipeData;
 
-    // Validate all required fields, including the file (image upload)
     if (!title || !time || !ingredients || !instructions || !file) {
       setError("Please fill in all fields, including the image.");
       return;
@@ -85,9 +84,10 @@ export default function AddFoodRecipe() {
 
   return (
     <div className="add-recipe-page">
-      <h2 className="form-title">Add Recipe</h2>
       <div className="container">
         <form className='form' onSubmit={onHandleSubmit}>
+          <h2 className="form-title">Add Recipe</h2>
+
           <div className='form-control' style={{ position: 'relative' }}>
             <label>Title <span className="required">*</span></label>
             <input

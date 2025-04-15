@@ -56,8 +56,8 @@ export default function EditRecipe() {
     e.preventDefault();
     const { title, time, ingredients, instructions } = recipeData;
 
-    if (!title || !time || !ingredients || !instructions) {
-      setError("Please fill in all fields.");
+    if (!title || !time || !ingredients || !instructions || !recipeData.file) {
+      setError("Please fill in all fields, including the image.");
       return;
     }
 
@@ -65,7 +65,6 @@ export default function EditRecipe() {
       const formData = new FormData();
       Object.keys(recipeData).forEach((key) => {
         if (key === "ingredients") {
-          // Ensure ingredients are stored as an array
           formData.append("ingredients", recipeData.ingredients.split(","));
         } else {
           formData.append(key, recipeData[key]);
@@ -87,10 +86,11 @@ export default function EditRecipe() {
 
   return (
     <div className="add-recipe-page">
-      <h2 className="form-title">Edit Recipe</h2>
       <div className="container">
         <form className='form' onSubmit={onHandleSubmit}>
-          <div className='form-control'>
+          <h2 className="form-title">Edit Recipe</h2>
+
+          <div className='form-control' style={{ position: 'relative' }}>
             <label>Title <span className="required">*</span></label>
             <input
               type="text"
@@ -100,6 +100,7 @@ export default function EditRecipe() {
               onChange={onHandleChange}
             />
           </div>
+
           <div className='form-control'>
             <label>Time (in minutes) <span className="required">*</span></label>
             <input
@@ -110,6 +111,7 @@ export default function EditRecipe() {
               onChange={onHandleChange}
             />
           </div>
+
           <div className='form-control'>
             <label>Ingredients (comma-separated) <span className="required">*</span></label>
             <textarea
@@ -120,6 +122,7 @@ export default function EditRecipe() {
               onChange={onHandleChange}
             ></textarea>
           </div>
+
           <div className='form-control'>
             <label>Instructions <span className="required">*</span></label>
             <ReactQuill
@@ -128,8 +131,9 @@ export default function EditRecipe() {
               theme="snow"
             />
           </div>
+
           <div className='form-control'>
-            <label>Recipe Image</label>
+            <label>Recipe Image <span className="required">*</span></label>
             <input
               type="file"
               className='input'
@@ -148,6 +152,7 @@ export default function EditRecipe() {
               </div>
             )}
           </div>
+
           {error && <p className="error">{error}</p>}
           <button type="submit">Update Recipe</button>
         </form>

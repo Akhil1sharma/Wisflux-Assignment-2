@@ -185,6 +185,7 @@ section {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 1rem; /* added for better spacing */
 }
 
 .login-page-wrapper {
@@ -265,7 +266,7 @@ section {
 .add-recipe-page {
   min-height: 100vh;
   overflow-y: auto;
-  padding-top: 6rem;
+  padding-top: 7rem; /* increased from 6rem */
   padding-bottom: 2rem;
   background-color: #ffffff;
 }
@@ -467,4 +468,14 @@ section {
 
 .search-form button:hover {
   background-color: #4F46E5;
+}
+
+.form .ql-container {
+  min-height: 200px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.form .ql-editor {
+  min-height: 150px;
 }
