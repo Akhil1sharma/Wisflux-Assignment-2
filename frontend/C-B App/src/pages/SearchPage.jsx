@@ -19,9 +19,14 @@ export default function SearchPage() {
   }, [query]);
 
   return (
-    <>
-      <h2 style={{ textAlign: 'center' }}>Search Results for "{query}"</h2>
+    <div className="search-page">
+  <div className="search-content">
+    <h2 className="search-heading">Search Results for "{query}"</h2>
+    <div className="card-container">
       <RecipeItems recipes={results} />
-    </>
+    </div>
+  </div>
+</div>
+
   );
 }

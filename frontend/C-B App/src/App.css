@@ -479,3 +479,19 @@ section {
 .form .ql-editor {
   min-height: 100px;
 }
+/* Centering ONLY the card container inside the search page */
+.search-page {
+  display: flex;
+  justify-content: center;
+  padding: 5rem;
+  width: 100%;
+}
+
+.search-page .card-container {
+  display: flex;
+  justify-content: center;   /* Horizontally center cards */
+  flex-wrap: wrap;
+  gap: 5rem;
+  max-width: 600px;
+}
+
