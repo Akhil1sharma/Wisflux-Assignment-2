@@ -1,0 +1,20 @@
+.favorite-button {
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .heart {
+    font-size: 24px;
+    color: #ccc;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  
+  .heart.active {
+    color: #dc3232;
+  }
+  
+  .heart:hover {
+    transform: scale(1.1);
+  }
+  

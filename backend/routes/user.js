@@ -1,9 +1,19 @@
-const express=require("express")
-const router=express.Router()
-const {userLogin,userSignUp,getUser}=require("../controller/user")
+const express = require("express");
+const { userLogin, userSignUp, getUser, addFavorite, removeFavorite, getFavorites } = require("../controller/user");
+const verifyToken = require("../middleware/auth");
 
-router.post("/signUp",userSignUp)
-router.post("/login",userLogin)
-router.get("/user/:id",getUser)
+const router = express.Router();
 
-module.exports=router
+// Auth routes
+router.post("/user/register", userSignUp);     // prefer /register instead of /signUp
+router.post("/user/login", userLogin);
+
+// User info route (protected)
+router.get("/me/:id", verifyToken, getUser);
+
+// Favorites routes (protected)
+router.post("/favorites/:recipeId", verifyToken, addFavorite);
+router.delete("/favorites/:recipeId", verifyToken, removeFavorite);
+router.get("/favorites", verifyToken, getFavorites);
+
+module.exports = router;

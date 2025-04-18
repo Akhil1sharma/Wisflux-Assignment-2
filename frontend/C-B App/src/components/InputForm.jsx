@@ -15,20 +15,23 @@ export default function InputForm({ setIsOpen }) {
     setError('');
     setLoading(true);
 
-    const endpoint = isSignUp ? 'signUp' : 'login';
+    const endpoint = isSignUp ? 'user/register' : 'user/login';  // 'signUp' ko 'register' se replace kiya gaya hai
 
     try {
-      const res = await axios.post(`http://localhost:5000/${endpoint}`, {
+      const res = await axios.post(`http://localhost:5000/user/${endpoint}`, { // Correct endpoint use kiya gaya hai
         email,
         password,
       });
 
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      // JWT Token ko localStorage mein store karna
+      localStorage.setItem('token', res.data.token);  // Store token in localStorage
+      localStorage.setItem('user', JSON.stringify(res.data.user));  // Store user data in localStorage
 
-      // Redirect after login/signup
-      navigate('/'); // or "/myRecipe" or any page you want
+      // Redirect after successful login/signup
+      navigate('/');  // Ya "/myRecipe", ya jo page tum chahte ho
+
     } catch (err) {
+      // Error handling
       setError(err.response?.data?.error || 'Something went wrong.');
     } finally {
       setLoading(false);

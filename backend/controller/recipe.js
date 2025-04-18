@@ -1,5 +1,6 @@
 const Recipes = require("../models/recipe");
 const multer = require('multer');
+const mongoose = require("mongoose"); // ✅ ✅ ✅ New line added for ID validation
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -19,8 +20,15 @@ const getRecipes = async (req, res) => {
 };
 
 const getRecipe = async (req, res) => {
+    const { id } = req.params;
+
+    // ✅ ✅ ✅ New validation for ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid recipe ID" });
+    }
+
     try {
-        const recipe = await Recipes.findById(req.params.id);
+        const recipe = await Recipes.findById(id);
 
         if (!recipe) {
             return res.status(404).json({ message: "Recipe not found" });

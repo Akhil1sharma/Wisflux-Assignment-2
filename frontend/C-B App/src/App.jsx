@@ -10,12 +10,17 @@ import RecipeDetails from './pages/RecipeDetails';
 import LoginPage from './pages/LoginPage';
 import MyRecipes from './pages/MyRecipes';
 import FavRecipesPage from './pages/FavRecipesPage';
-import SearchPage from './pages/SearchPage'; //  Import SearchPage
+import SearchPage from './pages/SearchPage'; // Import SearchPage
 
 // Load all recipes
 const getAllRecipes = async () => {
   let allRecipes = [];
-  await axios.get('http://localhost:5000/recipe').then(res => {
+  const token = localStorage.getItem('token');  // Fetch the token from localStorage
+  await axios.get('http://localhost:5000/recipe', {
+    headers: {
+      Authorization: `Bearer ${token}`  // Attach token in Authorization header
+    }
+  }).then(res => {
     allRecipes = res.data;
   });
   return allRecipes;
@@ -24,10 +29,19 @@ const getAllRecipes = async () => {
 // Load specific recipe details
 const getRecipe = async ({ params }) => {
   let recipe;
-  await axios.get(`http://localhost:5000/recipe/${params.id}`)
+  const token = localStorage.getItem('token');  // Fetch the token from localStorage
+  await axios.get(`http://localhost:5000/recipe/${params.id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`  // Attach token in Authorization header
+    }
+  })
     .then(res => recipe = res.data);
 
-  await axios.get(`http://localhost:5000/user/${recipe.createdBy}`)
+  await axios.get(`http://localhost:5000/user/me/${recipe.createdBy}`, {
+    headers: {
+      Authorization: `Bearer ${token}`  // Attach token in Authorization header
+    }
+  })
     .then(res => {
       recipe = { ...recipe, email: res.data.email };
     });

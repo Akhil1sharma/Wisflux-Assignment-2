@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import RecipeItems from '../components/RecipeItems'; // reuse the component!
+import { getFavorites } from '../services/favoritesService'; // Updated service
+import RecipeItems from '../components/RecipeItems';
 
 export default function FavRecipesPage() {
   const [favourites, setFavourites] = useState([]);
 
   useEffect(() => {
-    const favs = JSON.parse(localStorage.getItem("fav")) || []; //  key should match what's used in RecipeItems
-    setFavourites(favs);
+    const fetchFavorites = async () => {
+      try {
+        const response = await getFavorites();  // Correct endpoint se data fetch hoga
+        setFavourites(response.data.favorites || []);
+      } catch (error) {
+        console.error("Failed to fetch favorites:", error);
+      }
+    };
+
+    fetchFavorites();
   }, []);
 
   return (
