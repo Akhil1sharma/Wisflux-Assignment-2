@@ -6,7 +6,7 @@ const FavoriteButton = ({ recipeId, initialIsFavorite }) => {
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite || false);
 
   useEffect(() => {
-    // jab initialIsFavorite prop change ho, toh state update karo
+    // Check if initialIsFavorite prop is provided and set the state accordingly
     setIsFavorite(initialIsFavorite || false);
   }, [initialIsFavorite]);
 

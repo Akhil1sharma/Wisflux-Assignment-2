@@ -5,7 +5,7 @@ const verifyToken = require("../middleware/auth");
 const router = express.Router();
 
 // Auth routes
-router.post("/user/register", userSignUp);     // prefer /register instead of /signUp
+router.post("/user/register", userSignUp);     
 router.post("/user/login", userLogin);
 
 // User info route (protected)
