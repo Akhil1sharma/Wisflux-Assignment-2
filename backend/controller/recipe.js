@@ -1,6 +1,6 @@
 const Recipes = require("../models/recipe");
 const multer = require('multer');
-const mongoose = require("mongoose"); // ✅ ✅ ✅ New line added for ID validation
+const mongoose = require("mongoose"); //  New line added for ID validation
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -22,7 +22,7 @@ const getRecipes = async (req, res) => {
 const getRecipe = async (req, res) => {
     const { id } = req.params;
 
-    // ✅ ✅ ✅ New validation for ObjectId
+    //  New validation for ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: "Invalid recipe ID" });
     }
@@ -56,13 +56,13 @@ const addRecipe = async (req, res) => {
     }
 
     try {
-        // 🔍 Check if a recipe with the same title already exists for this user
+        //  Check if a recipe with the same title already exists for this user
         const existingRecipe = await Recipes.findOne({ title, createdBy: req.user.id });
         if (existingRecipe) {
             return res.status(400).json({ message: "You already have a recipe with this title." });
         }
 
-        // ✅ Proceed to create new recipe
+        // Proceed to create new recipe
         const newRecipe = await Recipes.create({
             title,
             ingredients,
