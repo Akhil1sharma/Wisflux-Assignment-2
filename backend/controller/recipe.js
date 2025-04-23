@@ -55,16 +55,28 @@ const addRecipe = async (req, res) => {
         return res.status(400).json({ message: "Required fields can't be empty" });
     }
 
-    const newRecipe = await Recipes.create({
-        title,
-        ingredients,
-        instructions,
-        time,
-        coverImage: req.file.filename,
-        createdBy: req.user.id
-    });
+    try {
+        // 🔍 Check if a recipe with the same title already exists for this user
+        const existingRecipe = await Recipes.findOne({ title, createdBy: req.user.id });
+        if (existingRecipe) {
+            return res.status(400).json({ message: "You already have a recipe with this title." });
+        }
 
-    return res.json(newRecipe);
+        // ✅ Proceed to create new recipe
+        const newRecipe = await Recipes.create({
+            title,
+            ingredients,
+            instructions,
+            time,
+            coverImage: req.file.filename,
+            createdBy: req.user.id
+        });
+
+        return res.json(newRecipe);
+    } catch (error) {
+        console.error("Error creating recipe:", error);
+        return res.status(500).json({ message: "Server error" });
+    }
 };
 
 const editRecipe = async (req, res) => {

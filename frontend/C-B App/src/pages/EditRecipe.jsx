@@ -79,9 +79,14 @@ export default function EditRecipe() {
       });
 
       navigate("/myRecipe");
-    } catch (err) {
+  } catch (err) {
+    // Check if the error is due to a duplicate key
+    if (err.response && err.response.data.error && err.response.data.error.includes("E11000")) {
+      setError("A recipe with this title already exists. Please choose a different title.");
+    } else {
       setError("Something went wrong while updating.");
     }
+  }
   };
 
   return (

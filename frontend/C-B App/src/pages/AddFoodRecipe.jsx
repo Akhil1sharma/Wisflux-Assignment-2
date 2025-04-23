@@ -78,7 +78,13 @@ export default function AddFoodRecipe() {
 
       navigate("/myRecipe");
     } catch (err) {
-      setError("Something went wrong while submitting.");
+      const serverMsg = err.response?.data?.message || err.message;
+
+      if (serverMsg.includes("recipe with this title")) {
+        setError("You already have a recipe with this title.");
+      } else {
+        setError("Something went wrong while updating.");
+      }
     }
   };
 

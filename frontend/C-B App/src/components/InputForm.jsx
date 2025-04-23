@@ -28,11 +28,17 @@ export default function InputForm({ setIsOpen }) {
       localStorage.setItem('user', JSON.stringify(res.data.user));  // Store user data in localStorage
 
       // Redirect after successful login/signup
-      navigate('/');  //
-
+      navigate('/');
     } catch (err) {
-      // Error handling
-      setError(err.response?.data?.error || 'Something went wrong.');
+      const serverMessage = err.response?.data?.message || err.response?.data?.error;
+
+      if (serverMessage?.includes("already exists")) {
+        setError("An account with this email already exists.");
+      } else if (serverMessage?.includes("Invalid credentials")) {
+        setError("Incorrect email or password.");
+      } else {
+        setError(serverMessage || "Something went wrong.");
+      }
     } finally {
       setLoading(false);
     }
