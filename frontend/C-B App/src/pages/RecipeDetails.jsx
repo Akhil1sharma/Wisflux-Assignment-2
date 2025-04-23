@@ -71,7 +71,7 @@ export default function RecipeDetails() {
                     </div>
                     <div className='instructions'>
                         <h4>Instructions</h4>
-                        <span>{recipe.instructions}</span>
+                        <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
                     </div>
                 </div>
             </div>
