@@ -10,7 +10,10 @@ import RecipeDetails from './pages/RecipeDetails';
 import LoginPage from './pages/LoginPage';
 import MyRecipes from './pages/MyRecipes';
 import FavRecipesPage from './pages/FavRecipesPage';
-import SearchPage from './pages/SearchPage'; // Import SearchPage
+import SearchPage from './pages/SearchPage'; 
+
+import { ToastContainer } from 'react-toastify'; 
+
 
 // Load all recipes
 const getAllRecipes = async () => {
@@ -71,6 +74,9 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <RouterProvider router={router} />
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer /> 
+    </>
   );
 }

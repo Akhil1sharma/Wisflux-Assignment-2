@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import { Link, useLoaderData, useNavigate } from 'react-router-dom';
 import { BsStopwatchFill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import FavoriteButton from './FavoriteButton'; // new import
-import { checkIsFavorite } from '../services/favoritesService'; // new import
+import FavoriteButton from './FavoriteButton';
+import { checkIsFavorite } from '../services/favoritesService';
 import axios from 'axios';
+import { toast } from 'react-toastify'; 
 
 export default function RecipeItems({ recipes: propRecipes }) {
     const loadedRecipes = useLoaderData(); // comes from Home page loader
@@ -38,7 +39,7 @@ export default function RecipeItems({ recipes: propRecipes }) {
     );
 }
 
-// Separated CardItem component for clarity
+
 function CardItem({ item, path, onDelete, navigate }) {
     const [isFavorited, setIsFavorited] = useState(false);
 
@@ -53,10 +54,21 @@ function CardItem({ item, path, onDelete, navigate }) {
         fetchFavorite();
     }, [item._id]);
 
+   
+    const handleCardClick = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.info("Please login to view the recipe!"); 
+            navigate('/login');
+        } else {
+            navigate(`/recipe/${item._id}`);
+        }
+    };
+
     return (
         <div
             className='card'
-            onClick={() => navigate(`/recipe/${item._id}`)}
+            onClick={handleCardClick} 
             style={{ cursor: 'pointer' }}
         >
             <img
@@ -74,7 +86,11 @@ function CardItem({ item, path, onDelete, navigate }) {
                         <FavoriteButton recipeId={item._id} initialIsFavorite={isFavorited} />
                     ) : (
                         <div className='action'>
-                            <Link to={`/editRecipe/${item._id}`} className="editIcon" onClick={(e) => e.stopPropagation()}>
+                            <Link 
+                                to={`/editRecipe/${item._id}`} 
+                                className="editIcon" 
+                                onClick={(e) => e.stopPropagation()}
+                            >
                                 <FaEdit />
                             </Link>
                             <MdDelete
