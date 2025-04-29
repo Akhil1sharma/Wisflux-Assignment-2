@@ -6,7 +6,6 @@ import { MdDelete } from "react-icons/md";
 import FavoriteButton from './FavoriteButton';
 import { checkIsFavorite } from '../services/favoritesService';
 import axios from 'axios';
-import { toast } from 'react-toastify'; 
 import defaultImage from '../assets/default-user.png'; 
 
 export default function RecipeItems({ recipes: propRecipes }) {
@@ -42,7 +41,7 @@ export default function RecipeItems({ recipes: propRecipes }) {
 
 function CardItem({ item, path, onDelete, navigate }) {
     const [isFavorited, setIsFavorited] = useState(false);
-    const [imgSrc, setImgSrc] = useState(`http://localhost:5000/images/${item.coverImage}`); // ✅ Controlled image state
+    const [imgSrc, setImgSrc] = useState(`http://localhost:5000/images/${item.coverImage}`);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -58,7 +57,6 @@ function CardItem({ item, path, onDelete, navigate }) {
     const handleCardClick = () => {
         const token = localStorage.getItem('token');
         if (!token) {
-            toast.info("Please login to view the recipe!"); 
             navigate('/login');
         } else {
             navigate(`/recipe/${item._id}`);
@@ -68,12 +66,12 @@ function CardItem({ item, path, onDelete, navigate }) {
     return (
         <div
             className='card'
-            onClick={handleCardClick} 
+            onClick={handleCardClick}
             style={{ cursor: 'pointer' }}
         >
             <img
                 src={imgSrc}
-                onError={() => setImgSrc(defaultImage)} // ✅ Blink-free fallback
+                onError={() => setImgSrc(defaultImage)}
                 width="120px"
                 height="100px"
                 alt={item.title}

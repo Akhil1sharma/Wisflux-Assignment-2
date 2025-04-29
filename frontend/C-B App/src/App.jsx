@@ -12,9 +12,6 @@ import MyRecipes from './pages/MyRecipes';
 import FavRecipesPage from './pages/FavRecipesPage';
 import SearchPage from './pages/SearchPage'; 
 
-import { ToastContainer } from 'react-toastify'; 
-
-
 // Load all recipes
 const getAllRecipes = async () => {
   let allRecipes = [];
@@ -76,7 +73,6 @@ export default function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <ToastContainer /> 
     </>
   );
 }
