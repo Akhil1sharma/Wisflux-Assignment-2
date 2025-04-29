@@ -7,6 +7,7 @@ import FavoriteButton from './FavoriteButton';
 import { checkIsFavorite } from '../services/favoritesService';
 import axios from 'axios';
 import { toast } from 'react-toastify'; 
+import defaultImage from '../assets/default-user.png'; 
 
 export default function RecipeItems({ recipes: propRecipes }) {
     const loadedRecipes = useLoaderData(); // comes from Home page loader
@@ -39,9 +40,9 @@ export default function RecipeItems({ recipes: propRecipes }) {
     );
 }
 
-
 function CardItem({ item, path, onDelete, navigate }) {
     const [isFavorited, setIsFavorited] = useState(false);
+    const [imgSrc, setImgSrc] = useState(`http://localhost:5000/images/${item.coverImage}`); // ✅ Controlled image state
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -54,7 +55,6 @@ function CardItem({ item, path, onDelete, navigate }) {
         fetchFavorite();
     }, [item._id]);
 
-   
     const handleCardClick = () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -72,8 +72,8 @@ function CardItem({ item, path, onDelete, navigate }) {
             style={{ cursor: 'pointer' }}
         >
             <img
-                src={`http://localhost:5000/images/${item.coverImage}`}
-                onError={(e) => e.target.src = "/default-image.jpg"}
+                src={imgSrc}
+                onError={() => setImgSrc(defaultImage)} // ✅ Blink-free fallback
                 width="120px"
                 height="100px"
                 alt={item.title}
