@@ -17,6 +17,7 @@ export default function Home() {
 
     return (
         <>
+            <div className="home-wrapper"></div>
             <section className='home'>
                 <div className='left'>
                     <h1>Food Recipe</h1>

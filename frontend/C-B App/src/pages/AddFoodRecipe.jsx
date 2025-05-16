@@ -43,7 +43,13 @@ export default function AddFoodRecipe() {
       console.error("Error fetching suggestions:", err);
       setSuggestions([]);
     }
-  };
+  };const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault(); // prevent form submit if needed
+    setShowSuggestions(false);
+  }
+};
+
 
   const handleSuggestionClick = (title) => {
     setRecipeData((pre) => ({ ...pre, title }));
@@ -102,6 +108,7 @@ export default function AddFoodRecipe() {
               name="title"
               value={recipeData.title || ""}
               onChange={onHandleChange}
+              onKeyDown={handleKeyDown}
             />
             {showSuggestions && suggestions.length > 0 && (
               <ul className="suggestions-list">
