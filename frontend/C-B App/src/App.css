@@ -486,16 +486,16 @@ section {
 
 .add-recipe-page,
 .fav-page {
-  width: 100vw; /* ✅ Force full viewport width */
+  width: 100vw; 
   min-height: 100vh;
   overflow-y: auto;
   padding-top: 7rem;
   padding-bottom: 2rem;
 
   background-image: url('/view-recipe-bg.jpg');
-  background-size: cover;         /* Cover full area */
-  background-position: center;    /* Center the image */
-  background-repeat: no-repeat;   /* Avoid tiling */
+  background-size: cover;         
+  background-position: center;    
+  background-repeat: no-repeat;   
 
   display: flex;
   flex-direction: column;
@@ -519,7 +519,7 @@ section {
 
 .search-content {
   width: 100%;
-  max-width: 1200px; /* ✅ wider area to hold more cards per row */
+  max-width: 1200px; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -528,8 +528,8 @@ section {
 .card-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* ✅ center all cards across rows */
-  gap: 2rem;               /* ✅ spacing between cards */
+  justify-content: center; 
+  gap: 2rem;               
   width: 100%;
   margin-top: 2rem;
   padding: 1rem;
