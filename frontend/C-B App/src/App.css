@@ -484,7 +484,7 @@ section {
 }
 
 .form .ql-editor {
-  max-height: 300px;
+  max-height: 150px;
   overflow-y: auto;
 }
 
