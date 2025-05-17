@@ -38,7 +38,7 @@ export default function Navbar() {
     <header>
       {/* Clickable Logo */}
       <Link to="/" className="app-logo">
-        <h2>Cook-Book App</h2>
+        <h2>Bite-Book </h2>
       </Link>
 
       {/* Search Bar */}
