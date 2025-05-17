@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 export default function EditRecipe() {
   const [recipeData, setRecipeData] = useState({});
   const [imagePreview, setImagePreview] = useState("");
+  const [coverImageName, setCoverImageName] = useState(""); // NEW STATE
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
@@ -27,6 +28,7 @@ export default function EditRecipe() {
           time: res.time
         });
         setImagePreview(`http://localhost:5000/images/${res.coverImage}`);
+        setCoverImageName(res.coverImage); // Set existing image name
       } catch (err) {
         setError("Failed to fetch recipe data.");
       }
@@ -42,6 +44,7 @@ export default function EditRecipe() {
       if (file) {
         setImagePreview(URL.createObjectURL(file));
         setRecipeData((prev) => ({ ...prev, file }));
+        setCoverImageName(file.name); // Update the name if file is newly chosen
       }
     } else {
       setRecipeData((prev) => ({ ...prev, [name]: value }));
@@ -56,7 +59,8 @@ export default function EditRecipe() {
     e.preventDefault();
     const { title, time, ingredients, instructions } = recipeData;
 
-    if (!title || !time || !ingredients || !instructions || !recipeData.file) {
+    // Image is only required if no preview and no existing filename
+    if (!title || !time || !ingredients || !instructions || (!recipeData.file && !coverImageName)) {
       setError("Please fill in all fields, including the image.");
       return;
     }
@@ -66,6 +70,10 @@ export default function EditRecipe() {
       Object.keys(recipeData).forEach((key) => {
         if (key === "ingredients") {
           formData.append("ingredients", recipeData.ingredients.split(","));
+        } else if (key === "file") {
+          if (recipeData.file) {
+            formData.append("file", recipeData.file);
+          }
         } else {
           formData.append(key, recipeData[key]);
         }
@@ -79,23 +87,22 @@ export default function EditRecipe() {
       });
 
       navigate("/myRecipe");
-  } catch (err) {
-    // Check if the error is due to a duplicate key
-    if (err.response && err.response.data.error && err.response.data.error.includes("E11000")) {
-      setError("A recipe with this title already exists. Please choose a different title.");
-    } else {
-      setError("Something went wrong while updating.");
+    } catch (err) {
+      if (err.response && err.response.data.error && err.response.data.error.includes("E11000")) {
+        setError("A recipe with this title already exists. Please choose a different title.");
+      } else {
+        setError("Something went wrong while updating.");
+      }
     }
-  }
   };
 
   return (
-    <div className="add-recipe-page">
-      <div className="container">
-        <form className='form' onSubmit={onHandleSubmit}>
+    <div className="add-recipe-page max-h-screen overflow-y-auto p-4">
+  <div className="container">
+    <form className='form' onSubmit={onHandleSubmit}>
           <h2 className="form-title">Edit Recipe</h2>
 
-          <div className='form-control' style={{ position: 'relative' }}>
+          <div className='form-control'>
             <label>Title <span className="required">*</span></label>
             <input
               type="text"
@@ -138,7 +145,7 @@ export default function EditRecipe() {
           </div>
 
           <div className='form-control'>
-            <label>Recipe Image <span className="required">*</span></label>
+            <label>Recipe Image {(!imagePreview || !coverImageName) && <span className="required">*</span>}</label>
             <input
               type="file"
               className='input'
@@ -148,7 +155,7 @@ export default function EditRecipe() {
             />
             {imagePreview && (
               <div style={{ marginTop: "10px" }}>
-                <p>Current Image Preview:</p>
+                <p>Current Image Preview {coverImageName && `(Filename: ${coverImageName})`}:</p>
                 <img
                   src={imagePreview}
                   alt="Preview"
