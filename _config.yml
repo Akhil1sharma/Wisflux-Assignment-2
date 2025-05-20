@@ -1,0 +1,7 @@
+title: Wisflux Assignment 2
+theme: jekyll-theme-primer
+
+# Prevent Jekyll from processing these folders
+exclude:
+  - backend
+  - backend/node_modules
